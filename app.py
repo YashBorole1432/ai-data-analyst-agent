@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 # import matplotlib.pyplot as plt
 # import seaborn as sns
-import openai
+# import openai
 import os
 import plotly.express as px
 import calendar
