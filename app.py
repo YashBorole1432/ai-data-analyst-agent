@@ -12,10 +12,10 @@ from io import BytesIO
 # from reportlab.platypus import (
 #     SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak
 # )
-from reportlab.lib import colors
-from datetime import datetime
+# from reportlab.lib import colors
+# from datetime import datetime
 import numpy as np # Added for optimize_dataframe
-from typing import Optional
+# from typing import Optional
 
 # Set the page configuration
 st.set_page_config(page_title="AI Data Analyst", layout="wide")
