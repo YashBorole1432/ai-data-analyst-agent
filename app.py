@@ -7,7 +7,7 @@ import os
 # import plotly.express as px
 import calendar
 from io import BytesIO
-from reportlab.lib.pagesizes import A4
+# from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import (
     SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak
