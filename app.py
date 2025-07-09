@@ -155,45 +155,62 @@ df = None
 uploaded_file = None # Ensure uploaded_file is also initialized
 
 # File uploader for CSV files
-uploaded_file = st.file_uploader("📁 Upload CSV or Excel", type=["csv", "xlsx"])
+# File uploader
+st.header("🔮 AI Business Insights Generator")
+uploaded_file = st.file_uploader("📁 Upload a CSV file", type=["csv"])
 
+# Read and check the data
 if uploaded_file is not None:
-    if uploaded_file.size == 0:
-        st.error("❌ Uploaded file is empty. Please upload a valid CSV/Excel.")
+    df = pd.read_csv(uploaded_file)  # ✅ Now df is your DataFrame
+
+    if not df.empty:
+        st.markdown("Generate meaningful business insights using GPT based on your uploaded dataset.")
+
+        if st.button("🧠 Generate Insights"):
+            with st.spinner("Thinking like an analyst..."):
+                sample_data = df.sample(min(1000, len(df))).to_csv(index=False)
+
+                prompt = f"""
+You're a senior business analyst. Analyze the dataset below and generate actionable insights in bullet points:
+
+- Highlight trends (e.g., top regions, products, time periods)
+- Mention anomalies or outliers
+- Give strategic recommendations for business
+- Keep it short and relevant for business teams
+
+DATA:
+{sample_data}
+
+INSIGHTS:
+"""
+
+                try:
+                    openai.api_key = st.secrets["openai_api_key"]  # Use Streamlit secrets for security
+                    response = openai.ChatCompletion.create(
+                        model="gpt-3.5-turbo",
+                        messages=[{"role": "user", "content": prompt}],
+                        temperature=0.4,
+                        max_tokens=700
+                    )
+                    insights = response.choices[0].message.content.strip()
+                    st.success("✅ Insights Generated!")
+                    st.markdown(insights)
+
+                    # Downloadable insights text file
+                    st.download_button(
+                        label="📄 Download Insights as TXT",
+                        data=insights,
+                        file_name="business_insights.txt",
+                        mime="text/plain"
+                    )
+
+                except Exception as e:
+                    st.error(f"❌ GPT Error: {e}")
     else:
-        try:
-            # Determine file type and load accordingly
-            if uploaded_file.name.endswith('.csv'):
-                # For CSV, use the chunk loader
-                # You might want to add a slider for 'limit' or set a default
-                limit = st.session_state.get('row_limit', 50000) # Default limit for large files
-                df = load_csv_in_chunks(uploaded_file, chunksize=5000, max_rows=limit)
-            elif uploaded_file.name.endswith(('.xlsx', '.xls')):
-                df = pd.read_excel(uploaded_file)
-            
-            st.success("✅ File loaded successfully!")
-            
-            # Apply initial cleaning and optimization
-            df = clean_dataframe(df)
-            df = optimize_dataframe_memory(df)
-
-            st.success(f"✅ Loaded {len(df)} rows | Memory: {memory_usage(df)}")
-
-            # Detect numeric and categorical columns after loading and cleaning
-            numeric_cols = df.select_dtypes(include='number').columns.tolist()
-            categorical_cols = df.select_dtypes(include='object').columns.tolist()
-
-            # Store df and column lists in session state to persist across reruns
-            st.session_state['df'] = df
-            st.session_state['numeric_cols'] = numeric_cols
-            st.session_state['categorical_cols'] = categorical_cols
-
-        except ValueError as e:
-            st.error(f"❌ {e}")
-        except Exception as e:
-            st.error(f"❌ Error reading file: {e}. Please ensure it's a valid CSV or Excel file.")
+        st.warning("⚠️ The uploaded CSV file is empty.")
 else:
-    st.info("📁 Please upload a CSV or Excel file to get started.")
+    st.info("📁 Please upload a CSV file first.")
+
     # Clear session state if no file is uploaded
     if 'df' in st.session_state:
         del st.session_state['df']
