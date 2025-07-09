@@ -236,7 +236,7 @@ if df is not None:
     height = st.slider("Figure Height", min_value=3, max_value=15, value=5)
 
     # Generate selected chart
-    import matplot.pyplot as plt
+    import matplotlib.pyplot as plt
     if chart_type == "Histogram":
         if numeric_cols:
             col = st.selectbox("Select numeric column for histogram", numeric_cols, key="hist_col_select")
