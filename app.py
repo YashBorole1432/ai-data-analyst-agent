@@ -4,7 +4,7 @@ import pandas as pd
 # import seaborn as sns
 # import openai
 import os
-import plotly.express as px
+# import plotly.express as px
 import calendar
 from io import BytesIO
 from reportlab.lib.pagesizes import A4
