@@ -8,10 +8,10 @@ import os
 import calendar
 from io import BytesIO
 # from reportlab.lib.pagesizes import A4
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.platypus import (
-    SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak
-)
+# from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+# from reportlab.platypus import (
+#     SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak
+# )
 from reportlab.lib import colors
 from datetime import datetime
 import numpy as np # Added for optimize_dataframe
